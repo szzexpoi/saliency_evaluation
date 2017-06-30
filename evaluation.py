@@ -19,18 +19,18 @@ def cal_cc_score(salMap, fixMap,center_bias):
     """
     eps = 2.2204e-16 #regularization value
     if np.max(salMap) > 0:
-        Map_1 = (salMap-np.mean(salMap)) / np.std(salMap)
+        Map_1 = np.copy(salMap)
     else:
         Map_1= salMap+eps
     if np.max(fixMap) > 0:
-        Map_2 = (fixMap-np.mean(fixMap)) / np.std(fixMap)
+        Map_2 = np.copy(fixMap)
     else:
         Map_2 = fixMap + eps
 
     #add center_bias
     if center_bias:
         cb = g_filter()
-        cb = cv2.resize(cb,(Map_1.shape[0],Map_1.shape[1]),interpolation = cv2.INTER_LINEAR)
+        cb = cv2.resize(cb,(Map_1.shape[1],Map_1.shape[0]),interpolation = cv2.INTER_LINEAR)
         Map_1 = Map_1*cb
 
     score = np.corrcoef(Map_1.reshape(-1), Map_2.reshape(-1))[0][1]
@@ -52,7 +52,7 @@ def cal_sim_score(salMap, fixMap,center_bias):
     #add center_bias
     if center_bias:
         cb = g_filter()
-        cb = cv2.resize(cb,(salMap.shape[0],salMap.shape[1]),interpolation = cv2.INTER_LINEAR)
+        cb = cv2.resize(cb,(salMap.shape[1],salMap.shape[0]),interpolation = cv2.INTER_LINEAR)
         salmap = salMap*cb
     else:
         salmap = np.copy(salMap)
@@ -81,7 +81,7 @@ def cal_kld_score(salMap,fixMap,center_bias): #recommand salMap to be free-viewi
     #add center_bias
     if center_bias:
         cb = g_filter()
-        cb = cv2.resize(cb,(salMap.shape[0],salMap.shape[1]),interpolation = cv2.INTER_LINEAR)
+        cb = cv2.resize(cb,(salMap.shape[1],salMap.shape[0]),interpolation = cv2.INTER_LINEAR)
         salmap = salMap*cb
     else:
         salmap = np.copy(salMap)
@@ -104,7 +104,7 @@ def cal_spearman_corr(salMap,fixMap,center_bias):
     #add center_bias
     if center_bias:
         cb = g_filter()
-        cb = cv2.resize(cb,(salMap.shape[0],salMap.shape[1]),interpolation = cv2.INTER_LINEAR)
+        cb = cv2.resize(cb,(salMap.shape[1],salMap.shape[0]),interpolation = cv2.INTER_LINEAR)
         salmap = salMap*cb
     else:
         salmap = np.copy(salMap)
@@ -126,7 +126,7 @@ def cal_auc_score(salMap, fixMap,center_bias):
 
     if center_bias:
         cb = g_filter()
-        cb = cv2.resize(cb,(salMap.shape[0],salMap.shape[1]),interpolation = cv2.INTER_LINEAR)
+        cb = cv2.resize(cb,(salMap.shape[1],salMap.shape[0]),interpolation = cv2.INTER_LINEAR)
         salmap = salMap*cb
     else:
         salmap = np.copy(salMap)
