@@ -3,6 +3,8 @@ import numpy as np
 from scipy.stats import spearmanr
 import cv2
 
+eps = 2.2204e-16 #regularization value
+
 def g_filter(shape =(200,200), sigma=60):
     """
     Using Gaussian filter to generate center bias
@@ -17,7 +19,6 @@ def cal_cc_score(salMap, fixMap,center_bias):
     """
     Compute CC score between two attention maps
     """
-    eps = 2.2204e-16 #regularization value
     if np.max(salMap) > 0:
         Map_1 = np.copy(salMap)
     else:
@@ -26,6 +27,14 @@ def cal_cc_score(salMap, fixMap,center_bias):
         Map_2 = np.copy(fixMap)
     else:
         Map_2 = fixMap + eps
+    """
+    salMap = salMap - np.min(salMap)
+    salMap = salMap / np.max(salMap)
+    Map_1 = salMap
+    fixMap = fixMap - np.min(fixMap)
+    fixMap = fixMap / np.max(fixMap)
+    Map_2 = fixMap
+    """
 
     #add center_bias
     if center_bias:
